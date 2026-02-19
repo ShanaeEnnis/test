@@ -1,0 +1,134 @@
+\documentclass{article}
+
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=0.9in] {geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single
+}
+
+
+\title{Data Structures Assignment 2}
+\author{Shanae' Ennis}
+\date{February 2026}
+
+\begin{document}
+\maketitle
+\section*{CSCI 3230 Homework}
+\hrulefill %line
+
+\newpage
+\subsection*{}
+
+\begin{enumerate}
+    \item \textbf{(20 points)} Answer “True” or “False”. Suppose the measure is time complexity under the big O-notation. 
+   \begin{enumerate}
+       \item A doubly linked list structure is worse than a singly linked list if we plan to do a lot of insertions.
+        \item A doubly linked list structure is worse than a  singly linked list if we plan to do a lot of deletions.
+        \item A doubly linked list structure is worse than a singly linked list if we plan to print the entire list frequently
+        \item An array implementation of a queue is more difficult to manage than the array implementation of a stack. \\
+        \textbf{\underline{Solution:} } \\
+        \textbf {(a) False; (b) False; (c) False; (d) True}
+   \end{enumerate}
+
+    \item \textbf{(40 points) Parenthesis Matching}
+        \begin{enumerate}
+            \item Please the above Pseudocode into Java Code “MatchDelimiters.java”.
+            \item Test your code with the above examples and provide a screenshot of your running result.
+        \end{enumerate}
+\end{enumerate}
+\textbf{\underline{Solution:}}
+\begin{lstlisting}
+import java.util.Stack;
+
+public class MatchDelimiters {
+
+    public static boolean isMatched(String expression) {
+        Stack<Character> S = new Stack<>();
+
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
+
+            if (ch == '(' || ch == '{' || ch == '[') {
+                S.push(ch);
+            }
+            else if (ch == ')' || ch == '}' || ch == ']') {
+
+                if (S.isEmpty()) {
+                    return false;
+                }
+
+                char top = S.pop();
+
+                if (!isPair(top, ch)) {
+                    return false;
+                }
+            }
+        }
+
+        return S.isEmpty();
+    }
+
+    private static boolean isPair(char open, char close) {
+        if (open == '(' && close == ')') return true;
+        if (open == '{' && close == '}') return true;
+        if (open == '[' && close == ']') return true;
+        return false;
+    }
+}
+\end{lstlisting}
+\newpage
+\textbf{\underline{Running Result (Screenshot Provided in Submission):}}
+\begin{lstlisting}
+() ( ( ) ) { ( [ ( ) ] ) }  -> true
+( ( ( ) ( ( ) ) { ( [ ( ) ] ) } ) )  -> true
+) ( ( ) ) { ( [ ( ) ] ) }  -> false
+( { [ ] ) }  -> false
+(  -> false
+\end{lstlisting} 
+\section*{Question 3 (40 points)}
+
+\textbf{Question:}  
+Describe how to implement the stack ADT using a single queue as an instance variable, and only constant additional local memory within the method bodies. What is the running time of the \texttt{push()}, \texttt{pop()}, and \texttt{top()} methods for your design?
+
+\bigskip
+
+\textbf{\underline{Solution:}}
+
+To implement the Stack ADT using a single queue, we maintain one queue $Q$ as an instance variable. No additional data structures are used, and only a constant amount of extra local memory is allowed inside each method.
+
+\textbf{Push Operation:}  
+To perform \texttt{push(x)}, we first enqueue the element $x$ into the queue. After inserting $x$, we rotate the previous elements in the queue to move them behind $x$. This is done by removing each of the previously existing elements from the front of the queue and re-enqueuing them at the rear. If the queue originally had $n$ elements, we perform $n$ dequeue and enqueue operations. After this rotation, the newly inserted element becomes the front of the queue, which represents the top of the stack.
+
+\textbf{Pop Operation:}  
+To perform \texttt{pop()}, we simply dequeue and return the front element of the queue. Since the most recently pushed element was rotated to the front during the push operation, this correctly follows the Last-In-First-Out (LIFO) principle.
+
+\textbf{Top Operation:}  
+To perform \texttt{top()}, we return the front element of the queue without removing it.
+
+\textbf{Running Time Analysis:}
+
+\begin{itemize}
+    \item \texttt{push()} takes $O(n)$ time because all existing elements must be rotated.
+    \item \texttt{pop()} takes $O(1)$ time since it performs one dequeue operation.
+    \item \texttt{top()} takes $O(1)$ time since it only accesses the front element.
+\end{itemize}
+
+Therefore, the stack can be implemented using one queue by making the push operation more expensive while keeping pop and top operations efficient.
+
+\end{document}
+
